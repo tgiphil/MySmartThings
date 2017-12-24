@@ -16,7 +16,6 @@ metadata {
 		capability "Actuator"
 		capability "Indicator"
  		capability "Switch"
-		capability "Polling"
 		capability "Refresh"
 		capability "Sensor"
 		capability "Health Check"
@@ -26,6 +25,12 @@ metadata {
 		fingerprint mfr:"0063", prod:"5257", deviceJoinName: "GE Wall Switch"
 		fingerprint mfr:"0063", prod:"5052", deviceJoinName: "GE Plug-In Switch"
 		fingerprint mfr:"0113", prod:"5257", deviceJoinName: "Z-Wave Wall Switch"
+		fingerprint mfr:"0039", prod:"5052", model:"3038", deviceJoinName: "Honeywell Z-Wave Plug-in Switch"
+		fingerprint mfr:"0039", prod:"5052", model:"3033", deviceJoinName: "Honeywell Z-Wave Plug-in Switch (Dual Outlet)"
+		fingerprint mfr:"0039", prod:"4F50", model:"3032", deviceJoinName: "Honeywell Z-Wave Plug-in Outdoor Smart Switch"
+		fingerprint mfr:"0039", prod:"4952", model:"3036", deviceJoinName: "Honeywell Z-Wave In-Wall Smart Switch"
+		fingerprint mfr:"0039", prod:"4952", model:"3037", deviceJoinName: "Honeywell Z-Wave In-Wall Smart Toggle Switch"
+		fingerprint mfr:"0039", prod:"4952", model:"3133", deviceJoinName: "Honeywell Z-Wave In-Wall Tamper Resistant Duplex Receptacle"
 	}
 
 	// simulator metadata
@@ -67,12 +72,12 @@ metadata {
 
 def installed() {
 	// Device-Watch simply pings if no device events received for 32min(checkInterval)
-	sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+	sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
 }
 
 def updated(){
 		// Device-Watch simply pings if no device events received for 32min(checkInterval)
-		sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+		sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
   switch (ledIndicator) {
         case "on":
             indicatorWhenOn()
@@ -87,6 +92,7 @@ def updated(){
             indicatorWhenOn()
             break
     }
+    sendHubCommand(new physicalgraph.device.HubAction(zwave.manufacturerSpecificV1.manufacturerSpecificGet().format()))
 }
 
 def getCommandClassVersions() {
@@ -176,18 +182,11 @@ def off() {
 	])
 }
 
-def poll() {
-	delayBetween([
-		zwave.switchBinaryV1.switchBinaryGet().format(),
-		zwave.manufacturerSpecificV1.manufacturerSpecificGet().format()
-	])
-}
-
 /**
   * PING is used by Device-Watch in attempt to reach the Device
 **/
 def ping() {
-		refresh()
+    zwave.switchBinaryV1.switchBinaryGet().format()
 }
 
 def refresh() {
