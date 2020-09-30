@@ -12,7 +12,7 @@
  *
  */
 metadata {
-	definition (name: "Aeon Outlet", namespace: "smartthings", author: "SmartThings") {
+	definition (name: "Aeon Outlet", namespace: "smartthings", author: "SmartThings", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false) {
 		capability "Energy Meter"
 		capability "Actuator"
 		capability "Switch"
@@ -22,7 +22,7 @@ metadata {
 
 		command "reset"
 
-		fingerprint deviceId: "0x1001", inClusters: "0x25,0x32,0x27,0x2C,0x2B,0x70,0x85,0x56,0x72,0x86", outClusters: "0x82"
+		fingerprint deviceId: "0x1001", inClusters: "0x25,0x32,0x27,0x2C,0x2B,0x70,0x85,0x56,0x72,0x86", outClusters: "0x82", deviceJoinName: "Aeon Outlet"
 	}
 
 	// simulator metadata

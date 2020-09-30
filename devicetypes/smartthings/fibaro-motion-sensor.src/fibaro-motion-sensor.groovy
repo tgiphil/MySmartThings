@@ -38,7 +38,7 @@
  * @return none
  */
  metadata {
-	definition (name: "Fibaro Motion Sensor", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "x.com.st.d.sensor.motion") {
+	definition (name: "Fibaro Motion Sensor", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "x.com.st.d.sensor.motion", runLocally: true, minHubCoreVersion: '000.021.00001', executeCommandsLocally: true) {
 		capability 	"Motion Sensor"
 		capability 	"Temperature Measurement"
 		capability 	"Acceleration Sensor"
@@ -54,8 +54,8 @@
 		command "test"
 		command "configure"
 
-		fingerprint mfr:"010F", prod:"0800", model:"2001"
-		fingerprint mfr:"010F", prod:"0800", model:"1001"
+		fingerprint mfr:"010F", prod:"0800", model:"2001", deviceJoinName: "Fibaro Motion Sensor"
+		fingerprint mfr:"010F", prod:"0800", model:"1001", deviceJoinName: "Fibaro Motion Sensor"
 	}
 
 	simulator {
@@ -260,7 +260,6 @@ log.debug cmd
 	map.name = "battery"
 	map.value = cmd.batteryLevel > 0 ? cmd.batteryLevel.toString() : 1
 	map.unit = "%"
-	map.displayed = false
 	map
 }
 
